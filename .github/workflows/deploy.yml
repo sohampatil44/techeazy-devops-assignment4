@@ -6,6 +6,7 @@ on:
       - main
       - feature/devops-assignment-3
       
+      
     tags:
       - deploy-dev
       - deploy-prod

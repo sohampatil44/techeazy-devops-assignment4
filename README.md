@@ -39,7 +39,7 @@ This project showcases a full pipeline that supports multi-stage (🛠 dev, 🚨
 
 ---
 
-## ⚙️ GitHub Secrets Required
+### ⚙️ GitHub Secrets Required
 
 To run this workflow securely, you must define the following **Secrets** in your GitHub repo:
 

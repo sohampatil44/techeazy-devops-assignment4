@@ -11,3 +11,4 @@ yum install -y java-21-amazon-corretto git
 if [ "${github_token}" != "" ]; then
   echo "${github_token}" > /home/ec2-user/token.txt
 fi  
+
