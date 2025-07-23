@@ -1,87 +1,113 @@
-# Assignment 4: CI/CD Multi-Stage Deployment
+# 🚀 Techeazy DevOps Deployment - Assignment 4
 
-## Prerequisites
-Before using this project, ensure you have the following:
+Welcome to the **Automated EC2 Deployment via Terraform & GitHub Actions** project!  
+This project showcases a full pipeline that supports multi-stage (🛠 dev, 🚨 prod) deployments, private/public repo logic, S3 log uploads, and health checks — all powered by **Terraform**, **GitHub Actions**, and **EC2** 💻☁️.
 
-- *AWS Account*: An active AWS account with programmatic access keys configured.
-- *GitHub Account*: A GitHub account where this repository will be hosted.
-- *GitHub Secrets*: The following secrets must be configured in your GitHub repository under Settings > Secrets > Actions:
-  - AWS_ACCESS_KEY_ID: Your AWS Access Key ID
-  - AWS_SECRET_ACCESS_KEY: Your AWS Secret Access Key
-  - GH_TOKEN: A GitHub Personal Access Token with repo scope
-- *S3 Bucket for Terraform State*: An S3 bucket must be pre-created in your AWS account for storing Terraform state files.
+---
+
+## 🌟 Assignment Objectives ✅
+
+### 🔁 Parameterized Multi-Stage Deployment
+- Supports `dev` and `prod` stages 🧪🛡
+- Dynamically handles configuration and environment separation
+- Selectable via:
+  - `workflow_dispatch` dropdown 🔽
+  - Branch/tag-based deployment triggers
+
+### 🧩 Config Separation
+- Stage-based config files (`dev.json`, `prod.json`)
+- Runtime config copied and loaded into your Spring Boot app on EC2 🔧
+
+### 🔐 Private/Public GitHub Config Handling
+- **Public repo** clone used in `dev` stage ✅
+- **Private repo** clone using token in `prod` stage 🔒
+- Token securely passed from GitHub Secrets 🔑
+
+### 📦 GitHub Token Handling
+- `REPO_ACCESS_TOKEN` stored securely in `GitHub Secrets`
+- Used only in `prod` when accessing private repo ✅
+
+### ☁️ Stage-Based S3 Log Upload
+- Logs are uploaded to:
+  - `s3://your-bucket/logs/dev/app.log`
+  - `s3://your-bucket/logs/prod/app.log`
+- Cloud-init logs are also uploaded 🚀
+
+### 🩺 Post-Deployment Health Check
+- Automated health check via `curl` on EC2 Public IP 🌐
+- Verifies that the Spring Boot app is running properly ✔️
+
+---
+
+### ⚙️ GitHub Secrets Required
+
+To run this workflow securely, you must define the following **Secrets** in your GitHub repo:
+
+| 🔐 Secret Name           | 📝 Description                                                                 |
+|--------------------------|---------------------------------------------------------------------------------|
+| `AWS_ACCESS_KEY_ID`      | Your AWS IAM Access Key ID                                                      |
+| `AWS_SECRET_ACCESS_KEY`  | Your AWS IAM Secret Access Key                                                  |
+| `REPO_ACCESS_TOKEN`      | Personal Access Token (PAT) to access **private** GitHub repo for `prod` stage |
+| `INSTANCE_KEY`           | Your EC2 PEM key content (used for SSH login to instance)                       |
+
+---
+
+## 🚦 How It Works
+
+1. 🧾 **Triggering the Workflow:**
+   - ✅ Manually trigger from the **Actions tab** using the `Run workflow` button and choose the `stage` (`dev` or `prod`)
+   - ⚠️ **Do not rely on auto-trigger via push** unless you configure default `stage` handling inside the code (manual trigger is safest)
+   - Tags like `deploy-dev` or `deploy-prod` can trigger, but only if predefined inputs are handled
+   - 💡 **Best Practice:** Always manually trigger for clean stage separation
 
 
-## Project Overview
-This project demonstrates the deployment of an application to an AWS EC2 instance using Terraform and GitHub Actions. It includes CI/CD deployment with different stages such as dev,qa and prod.
+2. 🛠 **Terraform Handles:**
+   - EC2 provisioning with correct tags
+   - S3 backend and bucket for logs
+   - Parameterized `.tfvars` for stage
 
+3. 💻 **GitHub Action Workflow:**
+   - Sets environment vars like `STAGE`
+   - Retrieves EC2 public IP
+   - Clones correct repo (public for dev / private for prod)
+   - Executes `deploy.sh` to build and run app
+   - Uploads logs to stage-specific S3 path
+   - Performs `curl`-based health check 🔍
 
-## Directory Structure
-* `.github/workflows`: Contains deploy.yml and destroy.yml file for CI/CD.
-* `terraform/`: Contains Terraform configuration files for deploying to EC2
+4. ☁️ **Logs Uploaded To S3:**
+   - Application log `app.log`
+   - Cloud-init log `cloud-init.log`
 
-## Deployment Steps
+---
 
-### Trigger Deployment Workflow
-1. Navigate to the Actions tab in your GitHub repository
-2. Select the "CI/CD Multi-Stage Deployment" workflow
-3. Click "Run workflow"
-4. Select the desired Deployment Stage (dev, qa, or prod)
-5. Click "Run workflow"
+## 📂 No Local File Structure Used
 
-### Monitor Deployment
-- The workflow run will start and show progress in GitHub Actions
-- Green checkmarks indicate successful steps
+This project uses:
+- `terraform/` directory for infrastructure code
+- `scripts/deploy.sh` for deployment logic
+- `.github/workflows/` for GitHub Actions CI/CD
 
-### Verify Application Health
-1. Check the "Validate app health" step output
-2. Alternatively, manually verify using the EC2 instance's public IP/DNS:
-   - Port 80 (frontend)
-   - Port 8080 (backend)
+Everything is modular and stage-aware 🎯
 
-### Access Logs
-Application logs will be pushed to your S3 bucket under stage-specific prefixes:
-s3://your-bucket-name/logs/dev/
-s3://your-bucket-name/logs/qa/
-s3://your-bucket-name/logs/prod/
+---
 
+## 📌 Tech Stack
 
-## Destroy the Infrastructure
-When infrastructure is no longer needed:
+- ☁️ **AWS EC2 & S3**
+- ⚙️ **Terraform**
+- 🧪 **Spring Boot + Maven**
+- 🤖 **GitHub Actions**
+- 🔐 **GitHub Secrets**
 
-1. *Trigger Destroy Workflow*:
-   - Navigate to Actions > Destroy Infrastructure
-   - Select the stage to destroy
-   - Run workflow
+---
 
-2. *Manually Empty S3 Bucket* (Required before destruction):
-   - Go to AWS S3 Console
-   - Find the relevant log bucket
-   - Select and delete all objects
+## ✅ Final Notes
 
+- Make sure your repo is **public** for `dev`, and **private** for `prod`
+- Secrets must be added **before running the workflow**
+- You can view deployment logs in both:
+  - GitHub Actions UI
+  - S3 bucket (organized by stage)
 
-## Workflow Details
-The GitHub Actions workflow is defined in `.github/workflows/deploy.yml`. It performs the following steps:
-
-1. **Checkout code**:  Uses actions/checkout@v3 to clone the repository's code onto the GitHub Actions runner.
-2. **Configure AWS credentials**: Uses aws-actions/configure-aws-credentials@v1 to set up AWS credentials on the runner using the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY secrets. The AWS region is also specified here.
-3. **Initialize Terraform**: Navigates to the terraform/ directory and runs terraform init to initialize the working directory, download provider plugins, and configure the S3 backend.
-4. **Apply Terraform configuration**: Executes terraform apply -auto-approve to provision the infrastructure defined in the terraform/ directory. This step uses variables (e.g., stage, github_pat) passed from the workflow inputs to customize the deployment.
-5. **Validate app health**: After successful Terraform application, this step sends an HTTP request to the deployed EC2 instance's public IP/DNS on the relevant port (80 or 8080) to confirm the application is running and reachable. This acts as a basic health check.
-
-## Note:-
-```
-resource "aws_s3_bucket" "example" {
-  bucket = var.s3_bucket_name 
-
-  #force_destroy = true 
-
-  tags = {
-    Name        = "My bucket"
-    Environment = "Dev"
-  }
-}
-```
-i commented force_destroy part in s3 bucket because Manually Empty the Bucket is Safest 
-This is the safest method, especially for production environments. You manually empty the bucket using the AWS Management Console or the AWS CLI before running terraform destroy.
+---
 
