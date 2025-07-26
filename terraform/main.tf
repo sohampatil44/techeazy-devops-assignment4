@@ -193,7 +193,7 @@ resource "aws_sns_topic_subscription" "email_alerts" {
 }
 resource "aws_cloudwatch_log_group" "app_log_group" {
     name = "techeazy-app-logs"
-    retention_in_days = 17
+    retention_in_days = 7
   
 }
 
