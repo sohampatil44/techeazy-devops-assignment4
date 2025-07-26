@@ -99,6 +99,11 @@ resource "aws_iam_role_policy_attachment" "writeonly_attach" {
     policy_arn = aws_iam_policy.s3_writeonly_policy.arn
   
 }
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent_attach" {
+    role = aws_iam_role.s3_writeonly_role.name
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  
+}
 
 #Instace profile for EC2
 
