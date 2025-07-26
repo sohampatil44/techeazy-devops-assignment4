@@ -73,7 +73,7 @@ sudo systemctl start amazon-cloudwatch-agent
 echo "Writing CloudWatch agent config..."
 mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
 aws s3 cp s3://${bucket_name}/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json || \
-cp /home/ec2-user/techeazy-devops-assignment4/configs/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+sudo cp /home/ec2-user/techeazy-devops-assignment4/configs/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
 echo "Starting Cloudwatch agent..."
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \

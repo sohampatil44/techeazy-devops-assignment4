@@ -71,7 +71,7 @@ resource "aws_iam_role" "s3_writeonly_role" {
         Version = "2012-10-17",
         Statement = [{
             Effect = "Allow",
-            Principal = {Service = "ec2.amazonaws.com"}
+            Principal = {Service = "ec2.amazonaws.com"},
             Action = "sts:AssumeRole"
         }]
     })
@@ -85,7 +85,7 @@ resource "aws_iam_policy" "s3_writeonly_policy" {
         Statement = [
             {
                 Effect = "Allow",
-                Action = ["s3:PutObject","s3:CreateBucket"]
+                Action = ["s3:PutObject","s3:CreateBucket","s3:GetObject","s3:ListBucket"]
                 Resource = "*"
 
             }
