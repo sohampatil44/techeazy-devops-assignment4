@@ -29,7 +29,7 @@ echo "Bucket: $bucket_name, Stage: $stage"
 sudo yum update -y -q
 sudo yum install -y -q java-21-amazon-corretto git
 
-cd /home/ec2-user/techeazy-devops
+cd /home/ec2-user/techeazy-devops-assignment4
 sudo chown -R ec2-user:ec2-user .
 
 # Debug the directory before build
@@ -38,8 +38,8 @@ pwd
 ls -la
 
 # Copy config
-CONFIG_FILE="/home/ec2-user/techeazy-devops/configs/${stage}.json"
-DEST="/home/ec2-user/techeazy-devops/configs/config.json"
+CONFIG_FILE="/home/ec2-user/techeazy-devops-assignment4/configs/${stage}.json"
+DEST="/home/ec2-user/techeazy-devops-assignment4/configs/config.json"
 echo "📄 Copying config from $CONFIG_FILE to $DEST"
 cp "$CONFIG_FILE" "$DEST"
 echo "Config copied successfully"
@@ -73,7 +73,7 @@ sudo systemctl start amazon-cloudwatch-agent
 echo "Writing CloudWatch agent config..."
 mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
 aws s3 cp s3://${bucket_name}/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json || \
-cp /home/ec2-user/techeazy-devops/configs/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+cp /home/ec2-user/techeazy-devops-assignment4/configs/cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
 echo "Starting Cloudwatch agent..."
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
