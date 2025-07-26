@@ -16,3 +16,4 @@ bucket_name = "techeazy-bucket-prod"
 
 repo_private = true
 
+alert_email = "hydrogen939@gmail.com"

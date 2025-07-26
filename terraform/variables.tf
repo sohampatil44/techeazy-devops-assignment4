@@ -56,3 +56,8 @@ variable "repo_private" {
     default = false
   
 }
+
+variable "alert_email" {
+    type = string
+  
+}
