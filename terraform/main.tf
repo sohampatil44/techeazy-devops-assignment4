@@ -191,10 +191,15 @@ resource "aws_sns_topic_subscription" "email_alerts" {
     endpoint = var.alert_email 
   
 }
+resource "aws_cloudwatch_log_group" "app_log_group" {
+    name = "techeazy-app-logs"
+    retention_in_days = 17
+  
+}
 
 resource "aws_cloudwatch_log_metric_filter" "error_filter" {
-    name = "app-error-filter"
-    log_group_name = "/techeazy/app"
+    name = "error-metric-filter"
+    log_group_name = aws_cloudwatch_log_group.app_log_group.name
     pattern = "?ERROR ?Exception"
 
 
