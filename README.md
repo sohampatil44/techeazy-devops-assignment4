@@ -54,7 +54,7 @@ Each stage = isolated monitoring resources ✅
 ✅ Alert Test: Error simulation triggers email
 ✅ Metrics Visible: ErrorCount metric appears in CloudWatch
 
-🔧 Quick Troubleshooting
+ Quick Troubleshooting
 Issue                    Solution
 No email alerts          Confirm SNS subscription via email link
 Logs not appearing       Check CloudWatch Agent status on EC2
