@@ -89,13 +89,13 @@ jobs:
             echo "Cloning repo inside EC2"
             if [ "${{ env.STAGE }}" = "dev" ]; then
               echo "Stage is dev, cloning public repo..."
-              git clone --depth 1 --branch feature/devops-assignment-5 https://github.com/sohampatil44/techeazy-devops-assignment4.git
+              git clone --depth 1 --branch feature/devops-assignment-5 https://github.com/sohampatil44/tech_eazy_devops_sohampatil44.git
             else
               echo "Stage is prod, cloning private repo with token..."
-              git clone --depth 1 --branch feature/devops-assignment-5 https://x-access-token:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/sohampatil44/techeazy-devops-assignment4.git
+              git clone --depth 1 --branch feature/devops-assignment-5 https://x-access-token:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/sohampatil44/tech_eazy_devops_sohampatil44.git
             fi
 
-            cd techeazy-devops-assignment4/scripts
+            cd tech_eazy_devops_sohampatil44/scripts
             chmod +x deploy.sh
 
             echo "---- Running deploy.sh ----"
