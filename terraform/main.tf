@@ -201,6 +201,11 @@ resource "aws_cloudwatch_log_group" "app_log_group" {
     retention_in_days = 7
   
 }
+resource "aws_cloudwatch_log_group" "system_log_group" {
+    name = "techeazy-system-logs"
+    retention_in_days = 7
+  
+}
 
 resource "aws_cloudwatch_log_metric_filter" "error_filter" {
     name = "error-metric-filter"
